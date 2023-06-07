@@ -54,11 +54,11 @@ function Sumary() {
                 </div>
 
                 <div className="col-xl-2 col-md-6 mb-4">
-                    <Card title={'Recargas'} amount={formatoMexico(data.recharges)}></Card>
+                    <Card title={'Recargas'} amount={formatoMexico(data.recharges)} currency='USD'></Card>
                 </div>
 
                 <div className="col-xl-2 col-md-6 mb-4">
-                    <Card title={'Banca'} amount={formatoMexico(data.bank)}></Card>
+                    <Card title={'Banca'} amount={formatoMexico(data.bank)} currency='USD'></Card>
                 </div>
 
                 <div className="col-xl-2 col-md-6 mb-4">
@@ -66,7 +66,7 @@ function Sumary() {
                 </div>
 
                 <div className="col-xl-2 col-md-6 mb-4">
-                    <Card title={'Saldo'} amount={formatoMexico(data.balance)}></Card>
+                    <Card title={'Saldo'} amount={formatoMexico(data.balance)} currency='USD'></Card>
                 </div>                
             </div>
 
