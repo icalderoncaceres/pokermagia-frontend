@@ -6,6 +6,7 @@ import { exportExcel } from '../../helpers/Excelexport';
 import { columnsOptions } from './columns';
 import Select from 'react-select';
 import { formatoMexico } from '../../helpers/FormatThousand';
+import { getBalanceTotal } from '../../helpers/getBalance';
 
 function Accounting() {
     interface IResults {
@@ -81,10 +82,107 @@ function Accounting() {
         setLevel(level);
     }
 
+    const calculateBalanceWithHands = (balance: number, hands: number, comodin: number): number => {
+        if (hands <= 25000 ) {
+            return balance = getBalanceTotal(balance, comodin, 40);
+            console.log("CONDICION NL5 1", balance);
+        }
+
+        if (hands > 25000 && hands <= 34999 ) {
+            return balance = getBalanceTotal(balance, comodin, 50);
+            console.log("CONDICION NL5 2", balance);
+        }
+        if (hands > 34999 && hands <= 44999 ) {
+            return balance = getBalanceTotal(balance, comodin, 55);
+            console.log("CONDICION NL5 3", balance);
+        }
+        if (hands > 44999 && hands <= 64999 ) {
+            return balance = getBalanceTotal(balance, comodin, 60);
+            console.log("CONDICION NL5 4", balance);
+        }
+        if (hands > 64999) {
+            return balance = getBalanceTotal(balance, comodin, 65);
+            console.log("CONDICION NL5 5", balance);
+        }
+
+        return balance;
+    }
+
+    const calculateConditions = (item: IConsolidate) => {
+        // Calculate NL Variables
+        let balance = item.bank - (item.rollStart + item.recharges);
+        let porcentaje = 50;
+        
+        if (Number(item.level) <= 5) {
+            // Condición 1  = NL5
+            // MANOS:
+            balance = calculateBalanceWithHands(balance, item.hands, item.comodin);
+        }
+
+        if (Number(item.level) > 5 && Number(item.level) <= 10) {
+            // Condición 2  = NL10
+            // MANOS:
+            if (item.hands >= 45001 && item.bank >= item.rollStart) {
+                // Condición 2 APLICA = NL10
+                let profitCashback = balance > 0 ? item.comodin * 50 / 100 : 0;
+                balance = balance + profitCashback;
+                //console.log("BALANCE+COMODIN", balance);
+                balance = calculateBalanceWithHands(balance, item.hands, 0);
+                // console.log("BALANCE CON CINCUENTA % DEL CASHBACK Y UN 40% DE BALANCE POR MANOS = ", item.playerName, "===", balance);
+            } else {
+                // Condición 2 NO APLICA = NL10
+                balance = balance - item.comodin;
+                balance = calculateBalanceWithHands(balance, item.hands, 0);
+            }
+        }
+
+        if (Number(item.level) > 10 && Number(item.level) <= 25) {
+            // Condición 2  = NL10
+            // MANOS:
+            if (item.hands >= 45001 && item.bank) {
+                // Condición 3 APLICA = NL25
+                let profitCashback = balance > 0 ? item.comodin * 50 / 100 : 0;
+                balance = balance + profitCashback;
+                balance = calculateBalanceWithHands(balance, item.hands, 0);
+            } else {
+                // Condición 3 NO APLICA = NL25
+                balance = balance - item.comodin;
+                balance = calculateBalanceWithHands(balance, item.hands, 0);
+            }
+        }
+
+        if (Number(item.level) > 25) {
+            // Condición 4  = NL50
+            // MANOS:
+            if (item.hands >= 45001 && item.bank) {
+                // Condición 4 APLICA = NL50
+                let profitCashback = balance > 0 ? item.comodin * 50 / 100 : 0;
+                balance = balance + profitCashback;
+                balance = calculateBalanceWithHands(balance, item.hands, 0);
+            } else {
+                // Condición 4 NO APLICA = NL50
+                balance = balance - item.comodin;
+                balance = calculateBalanceWithHands(balance, item.hands, 0);
+            }
+        }
+
+    }
+
     const calculateBalance = (item: IConsolidate, index: number): { clase: string, balance: number, profitPlayer: number, profitPokermagia: number } => {
         const balance = item.bank - (item.rollStart + item.recharges + item.comodin);
         let porcentaje = 0;
+
+        calculateConditions(item);
+
         const obj = levelsOptions.find((l: any) => l.value == item.level);
+
+        /*
+        console.log("este",obj);
+        console.log("item",item);
+        */
+
+        
+        
         if (obj && obj.porcentajes) {
             if (room === 'PARTYPOKER') {
                 porcentaje = obj.porcentajes.PARTYPOKER;
