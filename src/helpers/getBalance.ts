@@ -3,10 +3,21 @@ import { IConsolidate } from "../services/sumary/SumaryService.model";
 
 // POR ÚLTIMO SE EJECUTA ESTA FUNCIÓN
 export const getBalanceTotal = (balance: number, comodin: number, percent: number) => {
-  
   balance = balance - comodin;
   return balance * percent / 100;
 } 
+
+const getSumOrSubsCashback = (balance: number, comodin: number, percent: number, op: "SUMA" | "RESTA" ) => {
+    if (op === "SUMA") {
+        let profitCashback = balance > 0 ? comodin * percent / 100 : 0;
+        balance = balance + profitCashback;
+    }
+    if (op === "RESTA") {
+        balance = balance - comodin;
+    }
+
+    return balance;
+}
 
 // PRIMERO SE EJECUTAN ESTÁS FUNCIONES
 /*
@@ -34,12 +45,11 @@ if (Number(item.level) > 5 && Number(item.level) <= 10) {
     // MANOS:
     if (item.hands >= 45001 && item.bank >= item.rollStart) {
         // Condición 2 APLICA = NL10 (SE SUMA EL CASHBACK)
-        let profitCashback = balance > 0 ? item.comodin * 50 / 100 : 0;
-        balance = balance + profitCashback;
+        balance = getSumOrSubsCashback(balance, item.comodin, 50, "SUMA");
         return balance = calculateBalanceWithHandsPartyPoker(balance, item.hands, 0);
     } else {
         // Condición 2 NO APLICA = NL10 (SE RESTA EL CASHBACK)
-        balance = balance - item.comodin;
+        balance = getSumOrSubsCashback(balance, item.comodin, 0, "RESTA");
         return balance = calculateBalanceWithHandsPartyPoker(balance, item.hands, 0);
     }
 }
@@ -49,12 +59,11 @@ if (Number(item.level) > 10 && Number(item.level) <= 25) {
     // MANOS:
     if (item.hands >= 45001) {
         // Condición 3 APLICA = NL25
-        let profitCashback = balance > 0 ? item.comodin * 50 / 100 : 0;
-        balance = balance + profitCashback;
+        balance = getSumOrSubsCashback(balance, item.comodin, 50, "SUMA");
         return balance = calculateBalanceWithHandsPartyPoker(balance, item.hands, 0);
     } else {
         // Condición 3 NO APLICA = NL25
-        balance = balance - item.comodin;
+        balance = getSumOrSubsCashback(balance, item.comodin, 0, "RESTA");
         return balance = calculateBalanceWithHandsPartyPoker(balance, item.hands, 0);
     }
 }
@@ -64,12 +73,11 @@ if (Number(item.level) > 25) {
     // MANOS:
     if (item.hands >= 45001) {
         // Condición 4 APLICA = NL50
-        let profitCashback = balance > 0 ? item.comodin * 50 / 100 : 0;
-        balance = balance + profitCashback;
+        balance = getSumOrSubsCashback(balance, item.comodin, 50, "SUMA");
         return balance = calculateBalanceWithHandsPartyPoker(balance, item.hands, 0);
     } else {
         // Condición 4 NO APLICA = NL50
-        balance = balance - item.comodin;
+        balance = getSumOrSubsCashback(balance, item.comodin, 0, "RESTA");
         return balance = calculateBalanceWithHandsPartyPoker(balance, item.hands, 0);
     }
 }
@@ -77,7 +85,7 @@ if (Number(item.level) > 25) {
   return 0;
 }
 
-export const calculateBalanceWithNLGGPoker = (item: IConsolidate) => {
+export const calculateBalanceWithNLGGPoker = (item: IConsolidate): number => {
   let balance = item.bank - (item.rollStart + item.recharges);
 
   if (Number(item.level) <= 5) {
@@ -91,12 +99,11 @@ if (Number(item.level) > 5 && Number(item.level) <= 10) {
     // MANOS:
     if (item.hands >= 52001 && item.bank >= item.rollStart) {
         // Condición 2 APLICA = NL10
-        let profitCashback = balance > 0 ? item.comodin * 50 / 100 : 0;
-        balance = balance + profitCashback;
+        balance = getSumOrSubsCashback(balance, item.comodin, 50, "SUMA");
         return balance = calculateBalanceWithHandsGGPoker(balance, item.hands, 0);
     } else {
         // Condición 2 NO APLICA = NL10
-        balance = balance - item.comodin;
+        balance = getSumOrSubsCashback(balance, item.comodin, 0, "RESTA");
         return balance = calculateBalanceWithHandsGGPoker(balance, item.hands, 0);
     }
 }
@@ -106,12 +113,11 @@ if (Number(item.level) > 10 && Number(item.level) <= 25) {
     // MANOS:
     if (item.hands >= 52001) {
         // Condición 3 APLICA = NL25
-        let profitCashback = balance > 0 ? item.comodin * 50 / 100 : 0;
-        balance = balance + profitCashback;
+        balance = getSumOrSubsCashback(balance, item.comodin, 50, "SUMA");
         return balance = calculateBalanceWithHandsGGPoker(balance, item.hands, 0);
     } else {
         // Condición 3 NO APLICA = NL25
-        balance = balance - item.comodin;
+        balance = getSumOrSubsCashback(balance, item.comodin, 0, "RESTA");
         return balance = calculateBalanceWithHandsGGPoker(balance, item.hands, 0);
     }
 }
@@ -121,15 +127,16 @@ if (Number(item.level) > 25) {
     // MANOS:
     if (item.hands >= 52001) {
         // Condición 4 APLICA = NL50
-        let profitCashback = balance > 0 ? item.comodin * 50 / 100 : 0;
-        balance = balance + profitCashback;
+        balance = getSumOrSubsCashback(balance, item.comodin, 50, "SUMA");
         return balance = calculateBalanceWithHandsGGPoker(balance, item.hands, 0);
     } else {
         // Condición 4 NO APLICA = NL50
-        balance = balance - item.comodin;
+        balance = getSumOrSubsCashback(balance, item.comodin, 0, "RESTA");
         return balance = calculateBalanceWithHandsGGPoker(balance, item.hands, 0);
     }
 }
+
+  return 0;
 }
 
 // SEGUNDO SE EJECUTAN ESTÁS FUNCIONES

@@ -6,7 +6,7 @@ import { exportExcel } from '../../helpers/Excelexport';
 import { columnsOptions } from './columns';
 import Select from 'react-select';
 import { formatoMexico } from '../../helpers/FormatThousand';
-import { calculateBalanceWithHandsPartyPoker, calculateBalanceWithNLPartyPoker, getBalanceTotal } from '../../helpers/getBalance';
+import { calculateBalanceWithHandsPartyPoker, calculateBalanceWithNLGGPoker, calculateBalanceWithNLPartyPoker, getBalanceTotal } from '../../helpers/getBalance';
 
 function Accounting() {
     interface IResults {
@@ -84,22 +84,21 @@ function Accounting() {
 
     
 
-    const getTotalBalance = (item: IConsolidate, room: string ) => {
-        // Calculate NL Variables
+    const getTotalBalance = (item: IConsolidate, room: "PARTYPOKER" | "GGPOKER" ) => {
+        // Call getBalance Helper and Calculate Balance
         let balance: number = 0;
         switch (room) {
             case "PARTYPOKER":
                 balance = calculateBalanceWithNLPartyPoker(item);
                 break;
             case "GGPOKER":
-                balance = calculateBalanceWithNLPartyPoker(item);
+                balance = calculateBalanceWithNLGGPoker(item);
                 break;
             default:
                 return;
         }
 
         return balance;
-
     }
 
     const calculateBalance = (item: IConsolidate, index: number): { clase: string, balance: number, profitPlayer: number, profitPokermagia: number } => {
@@ -117,10 +116,12 @@ function Accounting() {
         if (obj && obj.porcentajes) {
             if (room === 'PARTYPOKER') {
                 porcentaje = obj.porcentajes.PARTYPOKER;
-                console.log(item.playerName," GET TOTAL BALANCE PARTY POKER: ", getTotalBalance(item, 'PARTYPOKER'));
+                getTotalBalance(item, "PARTYPOKER");
+                // console.log(item.playerName," GET TOTAL BALANCE PARTY POKER: ", getTotalBalance(item, 'PARTYPOKER'));
             } else if (room === 'GGPOKER') {
                 porcentaje = obj.porcentajes.GGPOKER;
                 getTotalBalance(item, 'GGPOKER');
+                // console.log(item.playerName," GET TOTAL BALANCE GG POKER: ", getTotalBalance(item, 'GGPOKER'));
             } else {
                 porcentaje = obj.porcentajes.FABIANPICHARA;
             }
