@@ -54,15 +54,15 @@ function Accounting() {
 
     const levelsOptions = [
         { value: "-1", label: "Seleccione el limite" },
-        { value: "1", label: "NL2", "porcentajes": { "PARTYPOKER": 10, "GGPOKER": 20, "FABIANPICHARA": 30 } },
-        { value: "2", label: "NL5", "porcentajes": { "PARTYPOKER": 20, "GGPOKER": 20, "FABIANPICHARA": 30 } },
-        { value: "3", label: "NL10", "porcentajes": { "PARTYPOKER": 30, "GGPOKER": 20, "FABIANPICHARA": 30 } },
-        { value: "4", label: "NL25", "porcentajes": { "PARTYPOKER": 35, "GGPOKER": 20, "FABIANPICHARA": 30 } },
-        { value: "5", label: "NL50", "porcentajes": { "PARTYPOKER": 40, "GGPOKER": 20, "FABIANPICHARA": 30 } },
-        { value: "6", label: "NL100", "porcentajes": { "PARTYPOKER": 45, "GGPOKER": 20, "FABIANPICHARA": 30 } },
-        { value: "7", label: "NL5/10", "porcentajes": { "PARTYPOKER": 50, "GGPOKER": 20, "FABIANPICHARA": 30 } },
-        { value: "8", label: "NL10/25", "porcentajes": { "PARTYPOKER": 55, "GGPOKER": 20, "FABIANPICHARA": 30 } },
-        { value: "9", label: "NL25/50", "porcentajes": { "PARTYPOKER": 60, "GGPOKER": 20, "FABIANPICHARA": 30 } },
+        { value: "1", label: "NL2", "porcentajes": { "PARTYPOKER": 50, "GGPOKER": 50, "FABIANPICHARA": 50 } },
+        { value: "2", label: "NL5", "porcentajes": { "PARTYPOKER": 50, "GGPOKER": 50, "FABIANPICHARA": 50 } },
+        { value: "3", label: "NL10", "porcentajes": { "PARTYPOKER": 50, "GGPOKER": 50, "FABIANPICHARA": 50 } },
+        { value: "4", label: "NL25", "porcentajes": { "PARTYPOKER": 50, "GGPOKER": 50, "FABIANPICHARA": 50 } },
+        { value: "5", label: "NL50", "porcentajes": { "PARTYPOKER": 50, "GGPOKER": 50, "FABIANPICHARA": 50 } },
+        { value: "6", label: "NL100", "porcentajes": { "PARTYPOKER": 50, "GGPOKER": 50, "FABIANPICHARA": 50 } },
+        { value: "7", label: "NL5/10", "porcentajes": { "PARTYPOKER": 50, "GGPOKER": 50, "FABIANPICHARA": 50 } },
+        { value: "8", label: "NL10/25", "porcentajes": { "PARTYPOKER": 50, "GGPOKER": 50, "FABIANPICHARA": 50 } },
+        { value: "9", label: "NL25/50", "porcentajes": { "PARTYPOKER": 50, "GGPOKER": 50, "FABIANPICHARA": 50 } },
     ]
 
     const [level, setLevel] = useState<string>();
@@ -84,7 +84,7 @@ function Accounting() {
 
     
 
-    const getTotalBalance = (item: IConsolidate, room: "PARTYPOKER" | "GGPOKER" ) => {
+    const getTotalBalance = (item: IConsolidate, room: "PARTYPOKER" | "GGPOKER" ): number => {
         // Call getBalance Helper and Calculate Balance
         let balance: number = 0;
         switch (room) {
@@ -95,39 +95,37 @@ function Accounting() {
                 balance = calculateBalanceWithNLGGPoker(item);
                 break;
             default:
-                return;
+                return 0;
         }
 
         return balance;
     }
 
     const calculateBalance = (item: IConsolidate, index: number): { clase: string, balance: number, profitPlayer: number, profitPokermagia: number } => {
-        const balance = item.bank - (item.rollStart + item.recharges + item.comodin);
+        const balance = item.bank - (item.rollStart + item.recharges);
         let porcentaje = 0;
-
-
         const obj = levelsOptions.find((l: any) => l.value == item.level);
 
         /*
         console.log("este",obj);
         console.log("item",item);
         */
-        
-        if (obj && obj.porcentajes) {
+        let profitPlayer = 0;
+        if (obj && obj.porcentajes && (balance > 0 || +item.level >= 4)) {
             if (room === 'PARTYPOKER') {
                 porcentaje = obj.porcentajes.PARTYPOKER;
-                getTotalBalance(item, "PARTYPOKER");
+                profitPlayer = getTotalBalance(item, "PARTYPOKER");
                 // console.log(item.playerName," GET TOTAL BALANCE PARTY POKER: ", getTotalBalance(item, 'PARTYPOKER'));
             } else if (room === 'GGPOKER') {
                 porcentaje = obj.porcentajes.GGPOKER;
-                getTotalBalance(item, 'GGPOKER');
+                profitPlayer = getTotalBalance(item, 'GGPOKER');
                 // console.log(item.playerName," GET TOTAL BALANCE GG POKER: ", getTotalBalance(item, 'GGPOKER'));
             } else {
                 porcentaje = obj.porcentajes.FABIANPICHARA;
             }
         }
 
-        const profitPlayer = balance > 0 ? balance * porcentaje / 100 : 0;
+        // = balance > 0 ? balance * porcentaje / 100 : 0;
         const profitPokermagia = balance - profitPlayer;
         let clase = '';
         if (index == rowSelect.index) {
