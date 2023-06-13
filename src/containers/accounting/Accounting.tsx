@@ -106,6 +106,8 @@ function Accounting() {
         let porcentaje = 0;
         const obj = levelsOptions.find((l: any) => l.value == item.level);
 
+        console.log("BALANCE: ", balance);
+        
         /*
         console.log("este",obj);
         console.log("item",item);

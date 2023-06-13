@@ -3,8 +3,8 @@ import { IConsolidate } from "../services/sumary/SumaryService.model";
 
 // POR ÚLTIMO SE EJECUTA ESTA FUNCIÓN
 export const getBalanceTotal = (balance: number, comodin: number, percent: number) => {
-    balance = balance - comodin;
-    return balance * percent / 100;
+    // balance = balance - comodin;
+    return balance > 0 ? balance * percent / 100 : 0;
 }
 
 const getSumOrSubsCashback = (balance: number, comodin: number, percent: number) => {
@@ -28,7 +28,6 @@ const getSumOrSubsCashback = (balance: number, comodin: number, percent: number)
 */
 export const calculateBalanceWithNLPartyPoker = (item: IConsolidate): number => {
     let balance = item.bank - (item.rollStart + item.recharges);
-    console.log(balance);
         
     if (Number(item.level) <= 2 || Number(item.level) === 7) {
         // Condición 1  = NL5
