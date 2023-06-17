@@ -1,8 +1,11 @@
+import { NavLink } from "react-router-dom"
 
 interface IProps {
     title: string
     amount: number | string
+    amount2?: number | string 
     currency?: 'USD' | 'EUR'
+    link?: string
 }
 
 
@@ -13,7 +16,10 @@ function Card(props: IProps) {
             : currency === "EUR" ? '€'
                 : '$'
     }
-
+    let go;
+    if (props.link) {
+        go = <NavLink to={props.link}>Ver</NavLink>
+    }
     return (
         <div className="card border-left-primary shadow h-100 py-1">
             <div className="card-body">
@@ -29,12 +35,12 @@ function Card(props: IProps) {
                                 <>
                                     <hr />
                                     <div className="h5 mb-0 font-weight-bold text-gray-800">
-                                        { selectSymbol('EUR') } {props.amount}
+                                        { selectSymbol('EUR') } {props.amount2 ? props.amount2 : 0}
                                     </div>
                                 </>
                             )
                         }
-
+                    {go}
                     </div>
                 </div>
             </div>

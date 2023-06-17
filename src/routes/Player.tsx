@@ -7,6 +7,7 @@ function PlayerRouter() {
     return (
         <Routes>
             <Route path="/" element={<List></List>}></Route>
+            <Route path="/ver" element={<List></List>}></Route>
             <Route path="/add" element={<Add></Add>}></Route>
         </Routes>
     )

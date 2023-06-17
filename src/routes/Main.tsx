@@ -14,6 +14,7 @@ import Configuration from '../containers/configuration/Configuration';
 import Accounting from '../containers/accounting/Accounting';
 import Alerts from '../containers/alerts/Alerts';
 import Consolidate from '../containers/closeMonth/consolidate/Consolidate';
+import List from '../components/player/list/List';
 
 function MainRouter() {
     return(
@@ -25,6 +26,7 @@ function MainRouter() {
             <Route path="/player" element={<Player></Player>}></Route>
             <Route path="/player/add" element={<Add></Add>}></Route>
             <Route path="/player/edit/:id" element={<Add></Add>}></Route>
+            <Route path="/player/:room" element={<List></List>}></Route>
             <Route path="/recharges" element={<Recharges></Recharges>}></Route>
             <Route path="/recharges/edit/:id/:player/:asker/:approver" element={<Recharge></Recharge>}></Route>
             <Route path="/closeMonth" element={<CloseMonth></CloseMonth>}></Route>

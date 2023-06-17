@@ -8,20 +8,52 @@ import { formatoMexico } from '../../helpers/FormatThousand';
 
 function Sumary() {
     interface ISumary {
-        rollStart: number
+        rollStart: {
+            dolar: number,
+            euro: number
+        }
         hands: number
-        balance: number
-        players: number
-        bank: number
-        recharges: number
+        balance: {
+            dolar: number,
+            euro: number
+        }
+        players: {
+            partyPoker: number,
+            ggPoker: number,
+            fabianPichara: number
+        }
+        bank: {
+            dolar: number,
+            euro: number
+        }
+        recharges: {
+            dolar: number,
+            euro: number
+        }
     }
     const initialState: ISumary = {
-        rollStart: 0,
+        rollStart: {
+            dolar: 0,
+            euro: 0
+        },
         hands: 0,
-        balance: 0,
-        players: 0,
-        bank: 0,
-        recharges: 0
+        balance: {
+            dolar: 0,
+            euro: 0
+        },
+        players: {
+            partyPoker: 0,
+            ggPoker: 0,
+            fabianPichara: 0
+        },
+        bank: {
+            dolar: 0,
+            euro: 0
+        },
+        recharges: {
+            dolar: 0,
+            euro: 0
+        }
     }
 
     const [data, setData] = useState<ISumary>(initialState)
@@ -46,19 +78,27 @@ function Sumary() {
             <div className="row">
 
                 <div className="col-xl-2 col-md-6 mb-4">
-                    <Card title={'Jugadores'} amount={data.players}></Card>
+                    <Card title={'Jugadores Party'} amount={data.players.partyPoker} link={'player/PARTYPOKER'}></Card>
                 </div>
 
                 <div className="col-xl-2 col-md-6 mb-4">
-                    <Card title={'Rollstart'} amount={formatoMexico(data.rollStart)} currency='USD'></Card>
+                    <Card title={'Jugadores GG'} amount={data.players.ggPoker} link={'player/GGPOKER'}></Card>
                 </div>
 
                 <div className="col-xl-2 col-md-6 mb-4">
-                    <Card title={'Recargas'} amount={formatoMexico(data.recharges)} currency='USD'></Card>
+                    <Card title={'Jugadores Fabian'} amount={data.players.fabianPichara} link={'player/FABIANPICHARA'}></Card>
                 </div>
 
                 <div className="col-xl-2 col-md-6 mb-4">
-                    <Card title={'Banca'} amount={formatoMexico(data.bank)} currency='USD'></Card>
+                    <Card title={'Rollstart'} amount={formatoMexico(data.rollStart.dolar)} amount2={formatoMexico(data.rollStart.euro)} currency='USD'></Card>
+                </div>
+
+                <div className="col-xl-2 col-md-6 mb-4">
+                    <Card title={'Recargas'} amount={formatoMexico(data.recharges.dolar)} amount2={formatoMexico(data.recharges.euro)} currency='USD'></Card>
+                </div>
+
+                <div className="col-xl-2 col-md-6 mb-4">
+                    <Card title={'Banca'} amount={formatoMexico(data.bank.dolar)} amount2={formatoMexico(data.bank.euro)} currency='USD'></Card>
                 </div>
 
                 <div className="col-xl-2 col-md-6 mb-4">
@@ -66,13 +106,13 @@ function Sumary() {
                 </div>
 
                 <div className="col-xl-2 col-md-6 mb-4">
-                    <Card title={'Saldo'} amount={formatoMexico(data.balance)} currency='USD'></Card>
+                    <Card title={'Saldo'} amount={formatoMexico(data.balance.dolar)} amount2={formatoMexico(data.bank.euro)} currency='USD'></Card>
                 </div>                
             </div>
 
             <div className="row">
                 <div className="col-sm-10 offset-md-1">
-                        <Chart Enero={0} Febrero={0} Marzo={0} Abril={0} Mayo={data.balance} Junio={0} Julio={0} Agosto={0} Septiembre={0} Octubre={0} Noviembre={0} Diciembre={0}></Chart>
+                        <Chart Enero={0} Febrero={0} Marzo={0} Abril={0} Mayo={data.balance.dolar} Junio={0} Julio={0} Agosto={0} Septiembre={0} Octubre={0} Noviembre={0} Diciembre={0}></Chart>
                 </div>
             </div>
         </>

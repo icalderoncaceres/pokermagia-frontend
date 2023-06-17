@@ -82,8 +82,6 @@ function Accounting() {
         setLevel(level);
     }
 
-    
-
     const getTotalBalance = (item: IConsolidate, room: "PARTYPOKER" | "GGPOKER" ): number => {
         // Call getBalance Helper and Calculate Balance
         let balance: number = 0;
@@ -128,7 +126,7 @@ function Accounting() {
         }
 
         // = balance > 0 ? balance * porcentaje / 100 : 0;
-        const profitPokermagia = balance - profitPlayer;
+        const profitPokermagia = balance > 0 ? balance - profitPlayer : 0;
         let clase = '';
         if (index == rowSelect.index) {
             clase = 'table-primary';
@@ -266,6 +264,14 @@ function Accounting() {
     } else {
         result = results.FABIANPICHARA;
     }
+    let sumarySection;
+    if (rowSelect && rowSelect.id) {
+        sumarySection = <div>
+            JUGADOR:<span>{rowSelect.playerName}</span>
+            PORCENTAJE:<input type="number" value="50"></input>
+            <button className="btn btn-primary">Actualizar</button>
+        </div>
+    }
     let selectLevel: any;
     if (level) {
         let porcentaje = 0;
@@ -332,7 +338,7 @@ function Accounting() {
             <hr />
             <div className="card shadow mb-4">
                 <div className="card-header py-3">
-                    {selectLevel}
+                    {sumarySection}
                     <hr />
                     <h6 className="m-0 font-weight-bold text-primary">Seleccione la sala / Sala seleccionada: {room}</h6>
                 </div>

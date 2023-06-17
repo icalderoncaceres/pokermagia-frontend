@@ -2,12 +2,28 @@
 export interface IGetSumaryResponse {
     status: number
     data?: {
-        balance: number
+        balance: {
+            dolar: number,
+            euro: number
+        },
         hands: number
-        players: number
-        bank: number
-        recharges: number
-        rollStart: number
+        players: {
+            partyPoker: number,
+            ggPoker: number,
+            fabianPichara: number
+        },
+        bank: {
+            dolar: number,
+            euro: number
+        },
+        recharges: {
+            dolar: number,
+            euro: number
+        },
+        rollStart: {
+            dolar: number,
+            euro: number
+        }
     }
     errors?: string[]
 }

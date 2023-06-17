@@ -1,6 +1,6 @@
 
 import React, {useEffect, useState} from 'react';
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { index } from '../../../services/players/PlayerService';
 import Table  from '../table/Table';
 
@@ -21,12 +21,17 @@ function List() {
 
     const [list,setList] = useState<IPlayer[]>([]);
 
+    const {room} = useParams();
     useEffect(() => {
         (async() => {
             try {                
                 const response = await index({});
                 if (response.status === 200 && response.players) {
-                    setList(response.players);
+                    if (room) {
+                        setList(response.players.filter((item: IPlayer) => item.room === room))
+                    } else {
+                        setList(response.players);
+                    }
                 }
             } catch (error) {
                 console.log(error);
